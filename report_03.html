@@ -1,0 +1,11 @@
+SELECT res.reservation_id "N° de réservation", res.creation_date "Date de création", 
+employee_id "N° de l'employé", UPPER(emp.last_name) ||' '|| emp.first_name "Nom de l'employé",
+UPPER(CUS.last_name) ||' '|| CUS.first_name "Nom du client"
+FROM t_reservation res
+JOIN t_employee emp USING(employee_id)
+JOIN t_customer cus 
+	ON(cus.customer_id = res.buyer_id)
+WHERE res.creation_date = (
+		SELECT MIN(res.creation_date)
+		FROM t_reservation res)
+/

@@ -1,0 +1,18 @@
+SELECT UPPER(cus.last_name) ||' '|| cus.first_name "Nom"
+FROM t_reservation res
+JOIN t_customer cus
+	ON (res.buyer_id = cus.customer_id)
+JOIN t_ticket tic
+	ON (tic.reservation_id = res.reservation_id)
+WHERE res.reservation_id IN (
+		SELECT res.reservation_id
+		FROM t_reservation res
+		JOIN t_customer cus
+			ON (res.buyer_id = cus.customer_id)
+		JOIN t_ticket tic
+			ON (tic.reservation_id = res.reservation_id)
+		GROUP BY res.reservation_id
+		HAVING COUNT(DECODE(tic.customer_id, res.buyer_id, 1, NULL)) = 0)
+GROUP BY UPPER(cus.last_name) ||' '|| cus.first_name
+ORDER BY "Nom"
+/
